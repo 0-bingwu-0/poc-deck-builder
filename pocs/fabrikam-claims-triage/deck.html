@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claims Email Triage POC: Results and Next Steps</title>
+<link rel="stylesheet" href="../../templates/deck.css">
+</head>
+<body>
+
+<section class="slide cover">
+  <h1>Claims Email Triage POC: Results and Next Steps</h1>
+  <p>Fabrikam Insurance · Contoso Consulting</p>
+  <p>October 22, 2026</p>
+</section>
+
+<section class="slide">
+  <h2>AI triage met 4 of 5 success criteria and cut handling time from 6 minutes to 41 seconds per email</h2>
+  <p class="lead">We recommend an 8-week pilot on the Motor inbox, with a fix for scanned claim forms.</p>
+  <div class="numbers">
+    <div><b>92.5%</b><p>of emails routed to the right team, against a 90% target</p></div>
+    <div><b>41 s</b><p>to handle an email with a handler checking, down from 6 min 10 s</p></div>
+    <div><b>88.2%</b><p>of claimed amounts read correctly, short of the 95% target because of scanned forms</p></div>
+  </div>
+  <p class="source">Source: POC test on 600 anonymized emails from January to June 2026. Time study with 3 handlers, 150 emails.</p>
+  <aside class="notes">Start with the answer. It routes emails and reads policy numbers well enough, and handlers get through an email in well under a minute. Say the miss on claimed amounts out loud now, so nobody finds it on slide 5 and wonders what else we left out.</aside>
+</section>
+
+<section class="slide">
+  <h2>Your intake team spends about 30 hours a day reading and routing claim emails</h2>
+  <ul>
+    <li><b>300 claim emails a day,</b> each read by one of the 4 people on Maria's team</li>
+    <li><b>6 min 10 s per email</b> to find the claim type, policy number, and amount, type them in, and forward it</li>
+    <li><b>Up to 2 days of backlog</b> in storm weeks, when customers call to ask if their claim arrived</li>
+    <li><b>The question for the POC:</b> can AI do the first read well enough that a handler only has to check it?</li>
+  </ul>
+  <p class="source">Source: Fabrikam time study, March 2026.</p>
+  <aside class="notes">These are Fabrikam's own numbers, from their March time study, not ours. Let Maria add to this if she wants.</aside>
+</section>
+
+<section class="slide">
+  <h2>The AI reads each email and suggests where it goes; a handler checks every suggestion</h2>
+  <div class="flow">
+    <div>Email arrives in the claims inbox</div>
+    <div>AI reads the email and its attachments</div>
+    <div>Suggests team, policy number, and amount, and says why</div>
+    <div>Handler accepts or changes it</div>
+  </div>
+  <ul>
+    <li><b>Tested on 600 past emails</b> from January to June 2026, anonymized by Fabrikam IT: 540 in English, 60 in Spanish</li>
+    <li><b>Customer data stayed in Fabrikam's Azure tenant.</b> Azure OpenAI in East US 2, signed off by Raj on September 30, before any emails were loaded</li>
+    <li><b>Not connected to live email or ClaimsHub</b> yet. That was out of scope for the POC</li>
+  </ul>
+  <aside class="notes">Keep this one short. The point for Dana is that nothing goes out without a handler checking it. The point for Raj is the data line: he reviewed the setup himself, so hand it to him if there are questions.</aside>
+</section>
+
+<section class="slide">
+  <h2>Four of five criteria met; claimed amounts fell short at 88.2%</h2>
+  <table>
+    <tr><th>Criterion</th><th>Target</th><th>Result</th><th>Status</th></tr>
+    <tr><td>Routed to the right team</td><td>≥ 90%</td><td>92.5% (555 of 600)</td><td class="met">Met</td></tr>
+    <tr><td>Policy number read correctly</td><td>≥ 95%</td><td>97.8% (587 of 600)</td><td class="met">Met</td></tr>
+    <tr><td>Claimed amount read correctly</td><td>≥ 95%</td><td>88.2% (300 of 340)</td><td class="missed">Not met</td></tr>
+    <tr><td>Handling time, with a handler checking</td><td>&lt; 1 min</td><td>41 s on average, from 6 min 10 s</td><td class="met">Met</td></tr>
+    <tr><td>Customer data stays in Fabrikam's tenant</td><td>Required</td><td>Signed off by Raj, September 30</td><td class="met">Met</td></tr>
+  </table>
+  <p class="source">Source: POC test on 600 anonymized emails labeled by Fabrikam's intake team. Claimed amount: the 340 emails that state one.</p>
+  <aside class="notes">These are the five criteria we agreed with Dana and Raj at kickoff, unchanged. For claimed amounts, the count is out of 340 because only 340 emails state an amount. If asked about routing by claim type, it's in the appendix.</aside>
+</section>
+
+<section class="slide">
+  <h2>With the suggestion and its reason next to the email, handlers took 41 seconds instead of 6 minutes</h2>
+  <div class="split">
+    <ul>
+      <li><b>41 s per email</b> on average across 150 emails, median 33 s</li>
+      <li><b>Handlers changed the suggested team on 11 of 150</b></li>
+      <li><b>The "Why" line</b> is what two handlers said made them trust the suggestions</li>
+    </ul>
+    <figure>
+      <img src="materials/review-screen.png" alt="The review screen from the time study">
+      <figcaption>The review screen from the time study</figcaption>
+    </figure>
+  </div>
+  <aside class="notes">This is the screen Maria's team used in the time study. Point at the Why line: Maria worried at kickoff that handlers would stop trusting a tool that's confidently wrong, and this is the answer to that.</aside>
+</section>
+
+<section class="slide">
+  <h2>Two gaps to fix before going live: scanned claim forms and Spanish emails</h2>
+  <div class="cols">
+    <div>
+      <h3>Scanned claim forms</h3>
+      <ul>
+        <li>29 of the 40 claimed-amount misses were scanned or handwritten forms</li>
+        <li>The other 11 had more than one amount, or a range</li>
+        <li><b>Fix:</b> add OCR (Azure AI Document Intelligence) before the AI reads them, then retest</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Spanish emails</h3>
+      <ul>
+        <li>75.0% routed to the right team, against 94.4% for English</li>
+        <li>Only 60 Spanish emails in the test set</li>
+        <li><b>Fix:</b> label 200 more Spanish emails, then retest</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Both fixes are in the pilot plan, and both get retested before anything goes live. Don't promise a number for the retest: we'll know after the pilot.</aside>
+</section>
+
+<section class="slide">
+  <h2>An 8-week pilot on the Motor inbox, then rollout to all claim types</h2>
+  <div class="cols">
+    <div>
+      <h3>Phase 1: Pilot, 8 weeks</h3>
+      <ul>
+        <li>Motor inbox only, about 43% of claim emails</li>
+        <li>Handlers check every suggestion</li>
+        <li>Add the OCR and Spanish fixes, then retest</li>
+        <li>Done when all five criteria hold on live email for 4 weeks in a row</li>
+        <li><b>$85,000</b> fixed fee</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Phase 2: Rollout, 10–12 weeks</h3>
+      <ul>
+        <li>All claim types</li>
+        <li>Confirmed fields go straight into ClaimsHub, so nobody types them in</li>
+        <li>A dashboard for accuracy and volume</li>
+        <li><b>$140,000–180,000,</b> firmed up after the pilot</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What Fabrikam provides</h3>
+      <ul>
+        <li><b>IT:</b> about 2 days a week from Raj's team, for mailbox access and Azure</li>
+        <li><b>Claims:</b> 2 handlers, about 3 hours a week each, for feedback</li>
+        <li><b>Running cost:</b> about $900 a year in Azure OpenAI usage at today's volume, plus OCR</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Phase 2 is an estimate, and we'll firm it up after the pilot. Say that plainly. Running cost: 300 emails a day, 250 working days, $0.012 each. OCR adds about a cent per scanned page, and we'll know the yearly total after the pilot.</aside>
+</section>
+
+<section class="slide">
+  <h2>We need a go on the pilot by November 13 to start December 1 with the same team</h2>
+  <ol>
+    <li><b>Dana:</b> approve the 8-week pilot ($85,000) by November 13</li>
+    <li><b>Raj:</b> set up mailbox access through Microsoft Graph before December 1</li>
+    <li><b>Maria:</b> name 2 handlers for the pilot before December 1</li>
+    <li><b>Contoso:</b> start the pilot on December 1</li>
+  </ol>
+  <aside class="notes">End on the ask and stop talking. If they need more time, say why the date matters: Wei, who built the POC, moves to another project on December 15 if the pilot hasn't started.</aside>
+</section>
+
+<section class="slide section">
+  <h2>Appendix</h2>
+</section>
+
+<section class="slide">
+  <h2>Routing held above 90% for every claim type except Liability, at 87.1%</h2>
+  <figure>
+    <svg width="1100" height="300" viewBox="0 0 1100 300" font-size="19">
+      <g style="fill: var(--text)">
+        <text x="0" y="46">Motor (260 emails)</text>
+        <text x="0" y="116">Property (180)</text>
+        <text x="0" y="186">Travel (90)</text>
+        <text x="0" y="256">Liability and other (70)</text>
+      </g>
+      <rect x="250" y="22" width="722" height="36" style="fill: var(--brand)"/>
+      <rect x="250" y="92" width="697" height="36" style="fill: var(--brand)"/>
+      <rect x="250" y="162" width="692" height="36" style="fill: var(--brand)"/>
+      <rect x="250" y="232" width="662" height="36" style="fill: var(--amber)"/>
+      <g font-weight="700" text-anchor="end" style="fill: var(--text)">
+        <text x="1100" y="46">95.0%</text>
+        <text x="1100" y="116">91.7%</text>
+        <text x="1100" y="186">91.1%</text>
+        <text x="1100" y="256">87.1%</text>
+      </g>
+      <line x1="934" y1="8" x2="934" y2="282" stroke-width="2" stroke-dasharray="6 5" style="stroke: var(--text)"/>
+      <text x="934" y="300" text-anchor="middle" font-size="15" style="fill: var(--muted)">Target 90%</text>
+    </svg>
+  </figure>
+  <p>Most Liability misses were injury emails that mention a car, which went to Motor.</p>
+  <p class="source">Source: POC test on 600 anonymized emails from January to June 2026. Bars run from 0 to 100%.</p>
+  <aside class="notes">Only if asked. Motor, where the pilot starts, has the best routing of the four.</aside>
+</section>
+
+</body>
+</html>
